@@ -1,0 +1,15 @@
+# Ambientes virtuais e chaves de ambiente
+.env
+venv/
+.venv/
+
+# Cache do Python e compilações
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Configurações do VS Code/IDE
+.vscode/
+.idea/
