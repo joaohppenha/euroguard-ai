@@ -6,13 +6,14 @@ from app.db.session import get_db
 from app.schemas.query import QueryRequest, QueryResponse
 from app.services.rag import answer_regulation_query
 
+# Instância principal do ASGI app procurada pelo Uvicorn
 app = FastAPI(
     title="EuroGuard AI",
     description="RAG System for GDPR & EU AI Act Compliance Analysis",
     version="1.0.0"
 )
 
-# Configuração de CORS para requisições de origens externas
+# Configuração de CORS para permitir requisições do Streamlit/frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,12 +22,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/", tags=["Health"])
+@app.get("/", tags=["Health Check"])
 def health_check():
+    """API Health Check Endpoint."""
     return {"status": "ok", "message": "EuroGuard AI API is running"}
 
 @app.post("/api/v1/query", response_model=QueryResponse, tags=["Regulation RAG"])
 def query_regulation(request: QueryRequest, db: Session = Depends(get_db)):
+    """Main RAG query endpoint for compliance questions."""
     try:
         answer = answer_regulation_query(db, request.query)
         return QueryResponse(query=request.query, response=answer)
